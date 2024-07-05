@@ -13,20 +13,30 @@
         {% endfor %}
     {% endif %}
     {% endwith %}
+    <p></p>
+ <!-- Son los botones para redirigirnos a las otras tablas -->
+    <button onclick="location.href='{{ url_for('index') }}'">Personas</button>
+    <button onclick="location.href='{{ url_for('estudiantes') }}'">Estudiantes</button>
+    <button onclick="location.href='{{ url_for('profesores') }}'">Profesores</button>
+    <button onclick="location.href='{{ url_for('materias') }}'">Materias</button>
+    <button onclick="location.href='{{ url_for('aulas') }}'">Aulas</button>
+    <button onclick="location.href='{{ url_for('calificaciones') }}'">Calificaciones</button>
+    <button onclick="location.href='{{ url_for('horarios') }}'">Horarios</button>
+    <button onclick="location.href='{{ url_for('materias_estudiantes') }}'">Materias-Estudiantes</button>
+        <p></p>
+        <p></p>
 
     <form action="/add_profesor" method="post">
         <input type="text" name="persona_id" placeholder="El id de la persona" required>
-        <input type="text" name="Especialidad" placeholder="Especialidad" required>
-        <input type="text" name="Fecha_contratacion" placeholder="Fecha de contratación (2024-07-04)" required>
+        <input type="text" name="Fecha_ingreso" placeholder="Fecha_ingreso" required>
         <button type="submit">Guardar</button>
     </form>
 
     <table>
         <thead>
             <tr>
-                <td>Persona ID</td>
-                <td>Especialidad</td>
-                <td>Fecha de Contratación</td>
+                <td>Persona_id</td>
+                <td>Fecha_ingreso</td>
                 <td>Operaciones</td>
             </tr>
         </thead>
@@ -35,10 +45,9 @@
             <tr>
                 <td>{{ profesor[1] }}</td>
                 <td>{{ profesor[2] }}</td>
-                <td>{{ profesor[3] }}</td>
                 <td>
                     <a href="/edit_profesores/{{ profesor[0] }}">Editar</a>
-                    <a href="/delete_profesor/{{ profesor[0] }}">Borrar</a>
+                    <a href="/delete_profesores/{{ profesor[0] }}">Borrar</a>
                 </td>
             </tr>
             {% endfor %}

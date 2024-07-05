@@ -1,3 +1,11 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personas</title>
+</head>
+<body>
 {% with messages = get_flashed_messages() %}
 {% if messages %}
     {% for message in messages %}
@@ -5,6 +13,19 @@
     {% endfor %}
 {% endif %}
 {% endwith %}
+
+    <p></p>
+ <!-- Son los botones para redirigirnos a las otras tablas -->
+    <button onclick="location.href='{{ url_for('index') }}'">Personas</button>
+    <button onclick="location.href='{{ url_for('estudiantes') }}'">Estudiantes</button>
+    <button onclick="location.href='{{ url_for('profesores') }}'">Profesores</button>
+    <button onclick="location.href='{{ url_for('materias') }}'">Materias</button>
+    <button onclick="location.href='{{ url_for('aulas') }}'">Aulas</button>
+    <button onclick="location.href='{{ url_for('calificaciones') }}'">Calificaciones</button>
+    <button onclick="location.href='{{ url_for('horarios') }}'">Horarios</button>
+    <button onclick="location.href='{{ url_for('materias_estudiantes') }}'">Materias-Estudiantes</button>
+        <p></p>
+        <p></p>
 
 <form action="/add_persona" method="post">
     <input type="text" name="Apellido paterno" placeholder="Apellido paterno" required>
@@ -39,3 +60,5 @@
         {% endfor %}
     </tbody>
 </table>
+</body>
+</html>

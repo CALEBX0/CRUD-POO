@@ -1,47 +1,63 @@
-{% with messages = get_flashed_messages() %}
-{% if messages %}
-    {% for message in messages %}
-        <p>{{ message }}</p>
-    {% endfor %}
-{% endif %}
-{% endwith %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estudiantes</title>
+</head>
+<body>
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+        {% for message in messages %}
+            <p>{{ message }}</p>
+        {% endfor %}
+    {% endif %}
+    {% endwith %}
+    <p></p>
+ <!-- Son los botones para redirigirnos a las otras tablas -->
+    <button onclick="location.href='{{ url_for('index') }}'">Personas</button>
+    <button onclick="location.href='{{ url_for('estudiantes') }}'">Estudiantes</button>
+    <button onclick="location.href='{{ url_for('profesores') }}'">Profesores</button>
+    <button onclick="location.href='{{ url_for('materias') }}'">Materias</button>
+    <button onclick="location.href='{{ url_for('aulas') }}'">Aulas</button>
+    <button onclick="location.href='{{ url_for('calificaciones') }}'">Calificaciones</button>
+    <button onclick="location.href='{{ url_for('horarios') }}'">Horarios</button>
+    <button onclick="location.href='{{ url_for('materias_estudiantes') }}'">Materias-Estudiantes</button>
+        <p></p>
+        <p></p>
 
-<form action="/add_estudiante" method="post">
-    <input type="text" name="persona_id" placeholder="El id de la persona">
-    <input type="text" name="Grado" placeholder="Grado">
-    <input type="text" name="Grupo" placeholder="Grupo">
-    <input type="text" name="Fecha_registro" placeholder="Fecha_registro (2024-07-04)">
-    <button type="submit">
-        Guardar
-    </button>
+    <form action="/add_estudiante" method="post">
+        <input type="text" name="persona_id" placeholder="El id de la persona">
+        <input type="text" name="Grado" placeholder="Grado">
+        <input type="text" name="Grupo" placeholder="Grupo">
+        <input type="text" name="Fecha_registro" placeholder="Fecha_registro (2024-07-04)">
+        <button type="submit">Guardar</button>
+    </form>
 
-</form>
-
-<table>
-    <thead>
-    <tr>
-        <td> persona_id </td>
-        <td> Grado </td>
-        <td> Grupo </td>
-        <td> Fecha_registro" </td>
-        <td> Operaciones </td>
-    </tr>
-    </thead>
-    <tbody>
-    {% for estudiante in estudiantes %}
-        <tr>
-            <td> {{ estudiante.1 }} </td>
-            <td> {{ estudiante.2 }} </td>
-            <td> {{ estudiante.3 }} </td>
-            <td> {{ estudiante.4 }} </td>
-        <td>
-            <a href="/edit_estudiante/{{estudiante.0}}">Editar</a>
-            <a href="/delete_estudiante/{{estudiante.0}}">Borrar</a>a
-        </td>
-        </tr>
-    {% endfor %}
-
-
-    </tbody>
-
-</table>
+    <table>
+        <thead>
+            <tr>
+                <td>persona_id</td>
+                <td>Grado</td>
+                <td>Grupo</td>
+                <td>Fecha_registro</td>
+                <td>Operaciones</td>
+            </tr>
+        </thead>
+        <tbody>
+            {% for estudiante in estudiantes %}
+            <tr>
+                <td>{{ estudiante[1] }}</td>
+                <td>{{ estudiante[2] }}</td>
+                <td>{{ estudiante[3] }}</td>
+                <td>{{ estudiante[4] }}</td>
+                <td>
+                    <a href="/edit_estudiantes/{{ estudiante[0] }}">Editar</a>
+                    <a href="/delete_estudiantes/{{ estudiante[0] }}">Borrar</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

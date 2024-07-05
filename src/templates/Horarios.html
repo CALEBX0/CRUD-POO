@@ -14,6 +14,20 @@
     {% endif %}
     {% endwith %}
 
+    <p></p>
+ <!-- Son los botones para redirigirnos a las otras tablas -->
+    <button onclick="location.href='{{ url_for('index') }}'">Personas</button>
+    <button onclick="location.href='{{ url_for('estudiantes') }}'">Estudiantes</button>
+    <button onclick="location.href='{{ url_for('profesores') }}'">Profesores</button>
+    <button onclick="location.href='{{ url_for('materias') }}'">Materias</button>
+    <button onclick="location.href='{{ url_for('aulas') }}'">Aulas</button>
+    <button onclick="location.href='{{ url_for('calificaciones') }}'">Calificaciones</button>
+    <button onclick="location.href='{{ url_for('horarios') }}'">Horarios</button>
+    <button onclick="location.href='{{ url_for('materias_estudiantes') }}'">Materias-Estudiantes</button>
+        <p></p>
+        <p></p>
+
+
     <form action="/add_horario" method="post">
         <input type="text" name="Profesor_id" placeholder="Id del Profesor" required>
         <input type="text" name="Materia_id" placeholder="Id de la materia" required>
@@ -43,6 +57,8 @@
                 <td>{{ horario[2] }}</td>
                 <td>{{ horario[3] }}</td>
                 <td>{{ horario[4] }}</td>
+                <td>{{ horario[5] }}</td>
+                <td>{{ horario[6] }}</td>
                 <td>
                     <a href="/edit_horarios/{{ horario[0] }}">Editar</a>
                     <a href="/delete_horarios/{{ horario[0] }}">Borrar</a>

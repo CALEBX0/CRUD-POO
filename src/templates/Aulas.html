@@ -13,9 +13,22 @@
         {% endfor %}
     {% endif %}
     {% endwith %}
+    <p></p>
+ <!-- Son los botones para redirigirnos a las otras tablas -->
+    <button onclick="location.href='{{ url_for('index') }}'">Personas</button>
+    <button onclick="location.href='{{ url_for('estudiantes') }}'">Estudiantes</button>
+    <button onclick="location.href='{{ url_for('profesores') }}'">Profesores</button>
+    <button onclick="location.href='{{ url_for('materias') }}'">Materias</button>
+    <button onclick="location.href='{{ url_for('aulas') }}'">Aulas</button>
+    <button onclick="location.href='{{ url_for('calificaciones') }}'">Calificaciones</button>
+    <button onclick="location.href='{{ url_for('horarios') }}'">Horarios</button>
+    <button onclick="location.href='{{ url_for('materias_estudiantes') }}'">Materias-Estudiantes</button>
+        <p></p>
+        <p></p>
 
     <form action="/add_aula" method="post">
         <input type="text" name="Nombre" placeholder="Nombre del aula" required>
+        <input type="text" name="Capacidad" placeholder="Capacidad" required>
         <button type="submit">Guardar</button>
     </form>
 
@@ -23,6 +36,7 @@
         <thead>
             <tr>
                 <td>Nombre</td>
+                <td>Capacidad</td>
                 <td>Operaciones</td>
             </tr>
         </thead>
@@ -31,7 +45,6 @@
             <tr>
                 <td>{{ aula[1] }}</td>
                 <td>{{ aula[2] }}</td>
-                <td>{{ aula[3] }}</td>
                 <td>
                     <a href="/edit_aulas/{{ aula[0] }}">Editar</a>
                     <a href="/delete_aulas/{{ aula[0] }}">Borrar</a>
