@@ -451,6 +451,60 @@ def borrar_horario(id):
     return redirect(url_for('horarios'))
 
 
+# Materias-Estudiantes (Para asignarle las materias pues xd)
+@app.route('/materias_estudiantes')
+def materias_estudiantes():
+    cur = mysql.connection.cursor()
+    cur.execute('SELECT * FROM materias_estudiantes')
+    data = cur.fetchall()
+    return render_template('materias_estudiantes.html', materias_estudiantes=data)
+
+@app.route('/add_materia_estudiante', methods=['POST'])
+def add_materia_estudiante():
+    if request.method == 'POST':
+        Estudiante_id = request.form['Estudiante_id']
+        Horario_id = request.form['Horario_id']
+
+        # Comprobar en la consola que se han ingresado esos datillos xd
+        print(f"Estudiante_id: {Estudiante_id}, Horario_id: {Horario_id}")
+
+        cur = mysql.connection.cursor()
+        cur.execute('INSERT INTO materias_estudiantes (Estudiante_id, Horario_id) VALUES (%s, %s)',
+                    (Estudiante_id, Horario_id))
+        mysql.connection.commit()
+        flash("Se agregó materia-estudiante exitosamente")
+        return redirect(url_for('materias_estudiantes'))
+
+@app.route('/edit_materias_estudiantes/<id>')
+def get_materia_estudiante(id):
+    cur = mysql.connection.cursor()
+    cur.execute('SELECT * FROM materias_estudiantes WHERE id = %s', [id])
+    data = cur.fetchall()
+    return render_template('Edit_materias_estudiantes.html', materia_estudiante=data[0])
+
+@app.route('/update_materia_estudiante/<id>', methods=['POST'])
+def update_materia_estudiante(id):
+    if request.method == 'POST':
+        Estudiante_id = request.form['Estudiante_id']
+        Horario_id = request.form['Horario_id']
+
+        cur = mysql.connection.cursor()
+        cur.execute("""
+        UPDATE materias_estudiantes
+        SET Estudiante_id = %s, Horario_id = %s
+        WHERE id = %s
+        """, (Estudiante_id, Horario_id, id))
+        mysql.connection.commit()
+        flash("materia-estudiante ha sido actualizado ;)")
+        return redirect(url_for('materias_estudiantes'))
+
+@app.route('/delete_materias_estudiantes/<string:id>')
+def borrar_materia_estudiante(id):
+    cur = mysql.connection.cursor()
+    cur.execute('DELETE FROM materias_estudiantes WHERE id={0}'.format(id))
+    mysql.connection.commit()
+    flash("Se eliminó materia-estudiante exitosamente")
+    return redirect(url_for('materias_estudiantes'))
 
 
 if __name__ == '__main__':
