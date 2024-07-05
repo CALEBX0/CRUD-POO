@@ -1,0 +1,47 @@
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+    {% for message in messages %}
+        <p>{{ message }}</p>
+    {% endfor %}
+{% endif %}
+{% endwith %}
+
+<form action="/add_estudiante" method="post">
+    <input type="text" name="persona_id" placeholder="El id de la persona">
+    <input type="text" name="Grado" placeholder="Grado">
+    <input type="text" name="Grupo" placeholder="Grupo">
+    <input type="text" name="Fecha_registro" placeholder="Fecha_registro (2024-07-04)">
+    <button type="submit">
+        Guardar
+    </button>
+
+</form>
+
+<table>
+    <thead>
+    <tr>
+        <td> persona_id </td>
+        <td> Grado </td>
+        <td> Grupo </td>
+        <td> Fecha_registro" </td>
+        <td> Operaciones </td>
+    </tr>
+    </thead>
+    <tbody>
+    {% for estudiante in estudiantes %}
+        <tr>
+            <td> {{ estudiante.1 }} </td>
+            <td> {{ estudiante.2 }} </td>
+            <td> {{ estudiante.3 }} </td>
+            <td> {{ estudiante.4 }} </td>
+        <td>
+            <a href="/edit_estudiante/{{estudiante.0}}">Editar</a>
+            <a href="/delete_estudiante/{{estudiante.0}}">Borrar</a>a
+        </td>
+        </tr>
+    {% endfor %}
+
+
+    </tbody>
+
+</table>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profesores</title>
+</head>
+<body>
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+        {% for message in messages %}
+            <p>{{ message }}</p>
+        {% endfor %}
+    {% endif %}
+    {% endwith %}
+
+    <form action="/add_profesor" method="post">
+        <input type="text" name="persona_id" placeholder="El id de la persona" required>
+        <input type="text" name="Especialidad" placeholder="Especialidad" required>
+        <input type="text" name="Fecha_contratacion" placeholder="Fecha de contratación (2024-07-04)" required>
+        <button type="submit">Guardar</button>
+    </form>
+
+    <table>
+        <thead>
+            <tr>
+                <td>Persona ID</td>
+                <td>Especialidad</td>
+                <td>Fecha de Contratación</td>
+                <td>Operaciones</td>
+            </tr>
+        </thead>
+        <tbody>
+            {% for profesor in profesores %}
+            <tr>
+                <td>{{ profesor[1] }}</td>
+                <td>{{ profesor[2] }}</td>
+                <td>{{ profesor[3] }}</td>
+                <td>
+                    <a href="/edit_profesores/{{ profesor[0] }}">Editar</a>
+                    <a href="/delete_profesor/{{ profesor[0] }}">Borrar</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

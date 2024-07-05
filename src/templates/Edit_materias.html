@@ -1,0 +1,6 @@
+<form action="/update_materia/{{ materia[0] }}" method="POST">
+    <input type="text" name="Nombre" placeholder="Nombre" value="{{ materia[1] }}">
+    <input type="text" name="Descripcion" placeholder="Descripcion" value="{{ materia[2] }}">
+    <input type="text" name="Profesor_id" placeholder="Id del profesor que impartirá la materia" value="{{ materia[3] }}">
+    <button type="submit">Guardar</button>
+</form>

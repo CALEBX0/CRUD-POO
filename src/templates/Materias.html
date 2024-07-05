@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Materias</title>
+</head>
+<body>
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+        {% for message in messages %}
+            <p>{{ message }}</p>
+        {% endfor %}
+    {% endif %}
+    {% endwith %}
+
+    <form action="/add_materia" method="post">
+        <input type="text" name="Nombre" placeholder="Nombre" required>
+        <input type="text" name="Descripcion" placeholder="Descripcion" required>
+        <input type="text" name="Profesor_id" placeholder="Id del profesor que impartirá la materia" required>
+        <button type="submit">Guardar</button>
+    </form>
+
+    <table>
+        <thead>
+            <tr>
+                <td>Nombre</td>
+                <td>Descripcion</td>
+                <td>Profesor_id</td>
+                <td>Operaciones</td>
+            </tr>
+        </thead>
+        <tbody>
+            {% for materia in materias %}
+            <tr>
+                <td>{{ materia[1] }}</td>
+                <td>{{ materia[2] }}</td>
+                <td>{{ materia[3] }}</td>
+                <td>
+                    <a href="/edit_materias/{{ materia[0] }}">Editar</a>
+                    <a href="/delete_materias/{{ materia[0] }}">Borrar</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

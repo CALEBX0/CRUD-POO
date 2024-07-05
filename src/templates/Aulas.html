@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aulas</title>
+</head>
+<body>
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+        {% for message in messages %}
+            <p>{{ message }}</p>
+        {% endfor %}
+    {% endif %}
+    {% endwith %}
+
+    <form action="/add_aula" method="post">
+        <input type="text" name="Nombre" placeholder="Nombre del aula" required>
+        <button type="submit">Guardar</button>
+    </form>
+
+    <table>
+        <thead>
+            <tr>
+                <td>Nombre</td>
+                <td>Operaciones</td>
+            </tr>
+        </thead>
+        <tbody>
+            {% for aula in aulas %}
+            <tr>
+                <td>{{ aula[1] }}</td>
+                <td>{{ aula[2] }}</td>
+                <td>{{ aula[3] }}</td>
+                <td>
+                    <a href="/edit_aulas/{{ aula[0] }}">Editar</a>
+                    <a href="/delete_aulas/{{ aula[0] }}">Borrar</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
