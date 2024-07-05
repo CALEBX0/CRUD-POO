@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aulas</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='Aulas.css') }}">
 </head>
 <body>
     {% with messages = get_flashed_messages() %}
@@ -28,7 +29,6 @@
 
     <form action="/add_aula" method="post">
         <input type="text" name="Nombre" placeholder="Nombre del aula" required>
-        <input type="text" name="Capacidad" placeholder="Capacidad" required>
         <button type="submit">Guardar</button>
     </form>
 
@@ -36,7 +36,6 @@
         <thead>
             <tr>
                 <td>Nombre</td>
-                <td>Capacidad</td>
                 <td>Operaciones</td>
             </tr>
         </thead>
@@ -44,7 +43,6 @@
             {% for aula in aulas %}
             <tr>
                 <td>{{ aula[1] }}</td>
-                <td>{{ aula[2] }}</td>
                 <td>
                     <a href="/edit_aulas/{{ aula[0] }}">Editar</a>
                     <a href="/delete_aulas/{{ aula[0] }}">Borrar</a>
