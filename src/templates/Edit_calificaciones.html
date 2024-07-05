@@ -1,0 +1,7 @@
+<form action="/update_calificacion/{{ calificacion[0] }}" method="POST">
+    <input type="text" name="Estudiante_id" placeholder="Id del Estudiante" value="{{ calificacion[1] }}">
+    <input type="text" name="Materia_id" placeholder="Id de la materia" value="{{ calificacion[2] }}">
+    <input type="text" name="Fecha" placeholder="Fecha" value="{{ calificacion[3] }}">
+    <input type="text" name="Calificacion" placeholder="Calificacion" value="{{ calificacion[4] }}">
+    <button type="submit">Guardar</button>
+</form>

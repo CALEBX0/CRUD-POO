@@ -325,7 +325,130 @@ def borrar_aula(id):
     return redirect(url_for('aulas'))
 
 
+# Calificaciones
+@app.route('/calificaciones')
+def calificaciones():
+    cur = mysql.connection.cursor()
+    cur.execute('SELECT * FROM calificaciones')
+    data = cur.fetchall()
+    return render_template('calificaciones.html', calificaciones=data)
 
+@app.route('/add_calificacion', methods=['POST'])
+def add_calificacion():
+    if request.method == 'POST':
+        Estudiante_id = request.form['Estudiante_id']
+        Materia_id = request.form['Materia_id']
+        Fecha = request.form['Fecha']
+        Calificacion = request.form['Calificacion']
+
+        # Comprobar en la consola que se han ingresado esos datillos xd
+        print(f"Estudiante_id: {Estudiante_id}, Materia_id: {Materia_id}, Fecha de Contratación: {Fecha}, Calificacion: {Calificacion}")
+
+        cur = mysql.connection.cursor()
+        cur.execute('INSERT INTO calificaciones (Estudiante_id, Materia_id, Fecha, Calificacion) VALUES (%s, %s, %s, %s)',
+                    (Estudiante_id, Materia_id, Fecha, Calificacion))
+        mysql.connection.commit()
+        flash("Se agregó la calificacion exitosamente")
+        return redirect(url_for('calificaciones'))
+
+@app.route('/edit_calificaciones/<id>')
+def get_calificacion(id):
+    cur = mysql.connection.cursor()
+    cur.execute('SELECT * FROM calificaciones WHERE id = %s', [id])
+    data = cur.fetchall()
+    return render_template('Edit_calificaciones.html', calificacion=data[0])
+
+@app.route('/update_calificacion/<id>', methods=['POST'])
+def update_calificacion(id):
+    if request.method == 'POST':
+        Estudiante_id = request.form['Estudiante_id']
+        Materia_id = request.form['Materia_id']
+        Fecha = request.form['Fecha']
+        Calificacion = request.form['Calificacion']
+
+        cur = mysql.connection.cursor()
+        cur.execute("""
+        UPDATE calificaciones
+        SET Estudiante_id = %s, Materia_id = %s, Fecha = %s, Calificacion = %s
+        WHERE id = %s
+        """, (Estudiante_id, Materia_id, Fecha, Calificacion, id))
+        mysql.connection.commit()
+        flash("La calificacion ha sido actualizado ;)")
+        return redirect(url_for('calificaciones'))
+
+@app.route('/delete_calificaciones/<string:id>')
+def borrar_calificacion(id):
+    cur = mysql.connection.cursor()
+    cur.execute('DELETE FROM calificaciones WHERE id={0}'.format(id))
+    mysql.connection.commit()
+    flash("Se eliminó la calificacion exitosamente")
+    return redirect(url_for('calificaciones'))
+
+
+
+
+# Horarios
+@app.route('/horarios')
+def horarios():
+    cur = mysql.connection.cursor()
+    cur.execute('SELECT * FROM horarios')
+    data = cur.fetchall()
+    return render_template('horarios.html', horarios=data)
+
+@app.route('/add_horario', methods=['POST'])
+def add_horario():
+    if request.method == 'POST':
+        Profesor_id = request.form['Profesor_id']
+        Materia_id = request.form['Materia_id']
+        Aula_id = request.form['Aula_id']
+        Dia = request.form['Dia']
+        Hora_inicio = request.form['Hora_inicio']
+        Hora_fin = request.form['Hora_fin']
+
+        # Comprobar en la consola que se han ingresado esos datillos xd
+        print(f"Profesor_id: {Profesor_id}, Materia_id: {Materia_id}, Aula_id: {Aula_id}, Dia: {Dia}, Hora_inicio: {Hora_inicio}, Hora_fin: {Hora_fin}")
+
+        cur = mysql.connection.cursor()
+        cur.execute('INSERT INTO horarios (Profesor_id, Materia_id, Aula_id, Dia, Hora_inicio, Hora_fin) VALUES (%s, %s, %s, %s, %s, %s)',
+                    (Profesor_id, Materia_id, Aula_id, Dia, Hora_inicio, Hora_fin))
+        mysql.connection.commit()
+        flash("Se agregó el horario exitosamente")
+        return redirect(url_for('horarios'))
+
+@app.route('/edit_horarios/<id>')
+def get_horario(id):
+    cur = mysql.connection.cursor()
+    cur.execute('SELECT * FROM horarios WHERE id = %s', [id])
+    data = cur.fetchall()
+    return render_template('Edit_horarios.html', horario=data[0])
+
+@app.route('/update_horario/<id>', methods=['POST'])
+def update_horario(id):
+    if request.method == 'POST':
+        Profesor_id = request.form['Profesor_id']
+        Materia_id = request.form['Materia_id']
+        Aula_id = request.form['Aula_id']
+        Dia = request.form['Dia']
+        Hora_inicio = request.form['Hora_inicio']
+        Hora_fin = request.form['Hora_fin']
+
+        cur = mysql.connection.cursor()
+        cur.execute("""
+        UPDATE horarios
+        SET Profesor_id = %s, Materia_id = %s, Aula_id = %s, Dia = %s, Hora_inicio = %s, Hora_fin = %s
+        WHERE id = %s
+        """, (Profesor_id, Materia_id, Aula_id, Dia, Hora_inicio, Hora_fin, id))
+        mysql.connection.commit()
+        flash("El horario ha sido actualizado ;)")
+        return redirect(url_for('horarios'))
+
+@app.route('/delete_horarios/<string:id>')
+def borrar_horario(id):
+    cur = mysql.connection.cursor()
+    cur.execute('DELETE FROM horarios WHERE id={0}'.format(id))
+    mysql.connection.commit()
+    flash("Se eliminó el horario exitosamente")
+    return redirect(url_for('horarios'))
 
 
 

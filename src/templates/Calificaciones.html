@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Materias</title>
+</head>
+<body>
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+        {% for message in messages %}
+            <p>{{ message }}</p>
+        {% endfor %}
+    {% endif %}
+    {% endwith %}
+
+    <form action="/add_calificacion" method="post">
+        <input type="text" name="Estudiante_id" placeholder="Id del Estudiante" required>
+        <input type="text" name="Materia_id" placeholder="Id de la materia" required>
+        <input type="text" name="Fecha" placeholder="Fecha" required>
+        <input type="text" name="Calificacion" placeholder="Calificacion" required>
+        <button type="submit">Guardar</button>
+    </form>
+
+    <table>
+        <thead>
+            <tr>
+                <td>Estudiante_id</td>
+                <td>Materia_id</td>
+                <td>Fecha</td>
+                <td>Calificación</td>
+                <td>Operaciones</td>
+            </tr>
+        </thead>
+        <tbody>
+            {% for calificacion in calificaciones %}
+            <tr>
+                <td>{{ calificacion[1] }}</td>
+                <td>{{ calificacion[2] }}</td>
+                <td>{{ calificacion[3] }}</td>
+                <td>{{ calificacion[4] }}</td>
+                <td>
+                    <a href="/edit_calificaciones/{{ calificacion[0] }}">Editar</a>
+                    <a href="/delete_calificaciones/{{ calificacion[0] }}">Borrar</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

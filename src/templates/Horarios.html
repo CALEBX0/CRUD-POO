@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Horarios</title>
+</head>
+<body>
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+        {% for message in messages %}
+            <p>{{ message }}</p>
+        {% endfor %}
+    {% endif %}
+    {% endwith %}
+
+    <form action="/add_horario" method="post">
+        <input type="text" name="Profesor_id" placeholder="Id del Profesor" required>
+        <input type="text" name="Materia_id" placeholder="Id de la materia" required>
+        <input type="text" name="Aula_id" placeholder="Id del Aula" required>
+        <input type="text" name="Dia" placeholder="Dia" required>
+        <input type="text" name="Hora_inicio" placeholder="Hora de inicio" required>
+        <input type="text" name="Hora_fin" placeholder="Hora de fin" required>
+        <button type="submit">Guardar</button>
+    </form>
+
+    <table>
+        <thead>
+            <tr>
+                <td>Profesor_id</td>
+                <td>Materia_id</td>
+                <td>Aula_id</td>
+                <td>Dia</td>
+                <td>Hora_inicio</td>
+                <td>Hora_fin</td>
+                <td>Operaciones</td>
+            </tr>
+        </thead>
+        <tbody>
+            {% for horario in horarios %}
+            <tr>
+                <td>{{ horario[1] }}</td>
+                <td>{{ horario[2] }}</td>
+                <td>{{ horario[3] }}</td>
+                <td>{{ horario[4] }}</td>
+                <td>
+                    <a href="/edit_horarios/{{ horario[0] }}">Editar</a>
+                    <a href="/delete_horarios/{{ horario[0] }}">Borrar</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

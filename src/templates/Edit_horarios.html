@@ -1,0 +1,9 @@
+<form action="/update_horario/{{ horario[0] }}" method="POST">
+    <input type="text" name="Profesor_id" placeholder="Id del Profesor" value="{{ horario[1] }}">
+    <input type="text" name="Materia_id" placeholder="Id de la materia" value="{{ horario[2] }}">
+    <input type="text" name="Aula_id" placeholder="Id del Aula" value="{{ horario[3] }}">
+    <input type="text" name="Dia" placeholder="Dia" value="{{ horario[4] }}">
+    <input type="text" name="Hora_inicio" placeholder="Hora de inicio" value="{{ horario[5] }}">
+    <input type="text" name="Hora_fin" placeholder="Hora de fin" value="{{ horario[6] }}">
+    <button type="submit">Guardar</button>
+</form>
