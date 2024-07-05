@@ -28,7 +28,8 @@
 
     <form action="/add_profesor" method="post">
         <input type="text" name="persona_id" placeholder="El id de la persona" required>
-        <input type="text" name="Fecha_ingreso" placeholder="Fecha_ingreso" required>
+        <input type="text" name="Especialidad" placeholder="Especialidad" required>
+        <input type="text" name="Fecha_contratacion" placeholder="Fecha de contratación (YYYY-MM-DD)" required>
         <button type="submit">Guardar</button>
     </form>
 
@@ -36,7 +37,8 @@
         <thead>
             <tr>
                 <td>Persona_id</td>
-                <td>Fecha_ingreso</td>
+                <td>Especialidad</td>
+                <td>Fecha_contratacion</td>
                 <td>Operaciones</td>
             </tr>
         </thead>
@@ -45,9 +47,10 @@
             <tr>
                 <td>{{ profesor[1] }}</td>
                 <td>{{ profesor[2] }}</td>
+                <td>{{ profesor[3] }}</td>
                 <td>
                     <a href="/edit_profesores/{{ profesor[0] }}">Editar</a>
-                    <a href="/delete_profesores/{{ profesor[0] }}">Borrar</a>
+                    <a href="/delete_profesor/{{ profesor[0] }}">Borrar</a>
                 </td>
             </tr>
             {% endfor %}
