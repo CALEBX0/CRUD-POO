@@ -28,7 +28,11 @@
         <p></p>
 
     <form action="/add_profesor" method="post">
-        <input type="text" name="persona_id" placeholder="El id de la persona" required>
+        <select name="persona_id">
+            {% for persona in personas %}
+                <option value="{{ persona[0] }}">{{ persona[1] }} {{ persona[2] }} {{ persona[3] }}</option>
+            {% endfor %}
+        </select>
         <input type="text" name="Especialidad" placeholder="Especialidad" required>
         <input type="text" name="Fecha_contratacion" placeholder="Fecha de contratación (YYYY-MM-DD)" required>
         <button type="submit">Guardar</button>
@@ -51,7 +55,7 @@
                 <td>{{ profesor[3] }}</td>
                 <td>
                     <a href="/edit_profesores/{{ profesor[0] }}">Editar</a>
-                    <a href="/delete_profesor/{{ profesor[0] }}">Borrar</a>
+                    <a href="/delete_profesor/{{ profesor[0] }}" onclick="return confirm('¿Estás seguro de que deseas borrar este profesor?');">Borrar</a>
                 </td>
             </tr>
             {% endfor %}

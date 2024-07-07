@@ -56,7 +56,7 @@
             <td>{{ persona[4] }}</td>
             <td>
                 <a href="/edit_persona/{{ persona[0] }}">Editar</a>
-                <a href="/delete_persona/{{ persona[0] }}">Borrar</a>
+                <a href="/delete_persona/{{ persona[0] }}" onclick="return confirm('¿Estás seguro de que deseas borrar a esta persona?');">Borrar</a>
             </td>
         </tr>
         {% endfor %}

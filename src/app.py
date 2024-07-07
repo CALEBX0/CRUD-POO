@@ -22,7 +22,6 @@ def index():
     print(data)
     return render_template('index.html', personas=data)
 
-
 # TABLA PERSONAS
 @app.route('/add_persona', methods=['POST'])
 def add_persona():
@@ -93,9 +92,13 @@ def borrar(id):
 def estudiantes():
     cur = mysql.connection.cursor()
     cur.execute('SELECT * FROM estudiantes')
-    data = cur.fetchall()
-    print(data)
-    return render_template('Estudiantes.html', estudiantes=data)
+    estudiantes_data = cur.fetchall()
+
+    cur.execute('SELECT id, nombre, apellido_p, apellido_m FROM personas')
+    personas_data = cur.fetchall()
+
+    return render_template('Estudiantes.html', estudiantes=estudiantes_data, personas=personas_data)
+
 
 
 @app.route('/add_estudiante', methods=['POST'])
@@ -118,23 +121,28 @@ def add_estudiante():
 def get_estudiante(id):
     cur = mysql.connection.cursor()
     cur.execute('SELECT * FROM estudiantes WHERE id = %s', [id])
-    data = cur.fetchall()
-    return render_template('Edit_estudiantes.html', estudiante=data[0])
+    estudiante = cur.fetchone()
+
+    cur.execute('SELECT * FROM personas')
+    personas = cur.fetchall()
+
+    return render_template('Edit_estudiantes.html', estudiante=estudiante, personas=personas)
+
 
 
 @app.route('/update_estudiante/<id>', methods=['POST'])
 def update_estudiante(id):
     if request.method == 'POST':
-        # Print the received form data
+        # pa ver que datos jaló
         print(request.form)
 
-        # Extract form data
+        # para extraerle los datos al form del html
         persona_id = request.form['persona_id']
         Grado = request.form['Grado']
         Grupo = request.form['Grupo']
         Fecha_registro = request.form['Fecha_registro']
 
-        # Update the database
+        # para actualizar la BD uwu
         cur = mysql.connection.cursor()
         cur.execute("""
         UPDATE estudiantes
@@ -159,8 +167,12 @@ def borrar_estudiante(id):
 def profesores():
     cur = mysql.connection.cursor()
     cur.execute('SELECT * FROM profesores')
-    data = cur.fetchall()
-    return render_template('profesores.html', profesores=data)
+    profesores_data = cur.fetchall()
+
+    cur.execute('SELECT id, nombre, apellido_p, apellido_m FROM personas')
+    personas_data = cur.fetchall()
+
+    return render_template('profesores.html', profesores=profesores_data, personas=personas_data)
 
 @app.route('/add_profesor', methods=['POST'])
 def add_profesor():
@@ -183,12 +195,21 @@ def add_profesor():
 def get_profesor(id):
     cur = mysql.connection.cursor()
     cur.execute('SELECT * FROM profesores WHERE id = %s', [id])
-    data = cur.fetchall()
-    return render_template('Edit_profesores.html', profesor=data[0])
+    profesor = cur.fetchone()
+
+    cur.execute('SELECT * FROM personas')
+    personas = cur.fetchall()
+
+    return render_template('Edit_profesores.html', profesor=profesor, personas=personas)
+
 
 @app.route('/update_profesor/<id>', methods=['POST'])
 def update_profesor(id):
     if request.method == 'POST':
+        # pa ver que datos jaló
+        print(request.form)
+
+        # para extraerle los datos al form del html
         persona_id = request.form['persona_id']
         Especialidad = request.form['Especialidad']
         Fecha_contratacion = request.form['Fecha_contratacion']

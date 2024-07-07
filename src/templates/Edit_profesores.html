@@ -1,6 +1,17 @@
 <form action="/update_profesor/{{ profesor[0] }}" method="POST">
-    <input type="text" name="persona_id" placeholder="persona_id" value="{{ profesor[1] }}">
+    <label for="persona_id">Persona ID:</label>
+    <select name="persona_id" id="persona_id">
+        {% for persona in personas %}
+            <option value="{{ persona[0] }}" {% if persona[0] == profesor[1] %}selected{% endif %}>
+                {{ persona[1] }} {{ persona[2] }} {{ persona[3] }} (ID: {{ persona[0] }})
+            </option>
+        {% endfor %}
+    </select>
+
+    <label for="Grado">Especialidad:</label>
     <input type="text" name="Especialidad" placeholder="Especialidad" value="{{ profesor[2] }}">
+
+    <label for="Grado">Fecha_contratacion:</label>
     <input type="text" name="Fecha_contratacion" placeholder="Fecha_contratacion (2024-07-04)" value="{{ profesor[3] }}">
     <button type="submit">Guardar</button>
 </form>

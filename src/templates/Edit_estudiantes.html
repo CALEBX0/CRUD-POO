@@ -1,7 +1,21 @@
 <form action="/update_estudiante/{{ estudiante[0] }}" method="POST">
-    <input type="text" name="persona_id" placeholder="persona_id" value="{{ estudiante[1] }}">
+    <label for="persona_id">Persona ID:</label>
+    <select name="persona_id" id="persona_id">
+        {% for persona in personas %}
+            <option value="{{ persona[0] }}" {% if persona[0] == estudiante[1] %}selected{% endif %}>
+                {{ persona[1] }} {{ persona[2] }} {{ persona[3] }} (ID: {{ persona[0] }})
+            </option>
+        {% endfor %}
+    </select>
+
+    <label for="Grado">Grado:</label>
     <input type="text" name="Grado" placeholder="Grado" value="{{ estudiante[2] }}">
+
+    <label for="Grupo">Grupo:</label>
     <input type="text" name="Grupo" placeholder="Grupo" value="{{ estudiante[3] }}">
-    <input type="text" name="Fecha_registro" placeholder="Fecha_registro (2024-07-04)" value="{{ estudiante[4] }}">
+
+    <label for="Fecha_registro">Fecha de Registro (2024-07-04):</label>
+    <input type="text" name="Fecha_registro" placeholder="Fecha_registro" value="{{ estudiante[4] }}">
+
     <button type="submit">Guardar</button>
 </form>
