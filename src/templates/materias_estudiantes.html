@@ -28,8 +28,20 @@
         <p></p>
 
     <form action="/add_materia_estudiante" method="post">
-        <input type="text" name="Estudiante_id" placeholder="Id del Estudiante" required>
-        <input type="text" name="Horario_id" placeholder="Id del Horario" required>
+
+        <label for="Estudiante_id">Estudiante ID:</label>
+        <select name="Estudiante_id">
+            {% for estudiante in estudiantes %}
+                <option value="{{ estudiante[0] }}">{{ estudiante[1] }} {{ estudiante[2] }} {{ estudiante[3] }}</option>
+            {% endfor %}
+        </select>
+        <p></p>
+        <label for="Horario_id">Horario ID:</label>
+        <select name="Horario_id">
+            {% for horario in horarios %}
+                <option value="{{ horario[0] }}">{{ horario[1] }} {{ horario[2] }} {{ horario[3] }}</option>
+            {% endfor %}
+        </select>
         <button type="submit">Guardar</button>
     </form>
 
@@ -48,7 +60,7 @@
                 <td>{{ materia_estudiante[2] }}</td>
                 <td>
                     <a href="/edit_materias_estudiantes/{{ materia_estudiante[0] }}">Editar</a>
-                    <a href="/delete_materias_estudiantes/{{ materia_estudiante[0] }}">Borrar</a>
+                    <a href="/delete_materias_estudiantes/{{ materia_estudiante[0] }}" onclick="return confirm('¿Estás seguro de que deseas borrar esta asignación de materias?');">Borrar</a>
                 </td>
             </tr>
             {% endfor %}

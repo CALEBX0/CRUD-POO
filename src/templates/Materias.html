@@ -30,7 +30,11 @@
     <form action="/add_materia" method="post">
         <input type="text" name="Nombre" placeholder="Nombre" required>
         <input type="text" name="Descripcion" placeholder="Descripcion" required>
-        <input type="text" name="Profesor_id" placeholder="Id del profesor que impartirá la materia" required>
+        <select name="Profesor_id">
+            {% for profesor in profesores %}
+                <option value="{{ profesor[0] }}">{{ profesor[1] }} {{ profesor[2] }}</option>
+            {% endfor %}
+        </select>
         <button type="submit">Guardar</button>
     </form>
 
@@ -51,7 +55,7 @@
                 <td>{{ materia[3] }}</td>
                 <td>
                     <a href="/edit_materias/{{ materia[0] }}">Editar</a>
-                    <a href="/delete_materias/{{ materia[0] }}">Borrar</a>
+                    <a href="/delete_materias/{{ materia[0] }}" onclick="return confirm('¿Estás seguro de que deseas borrar esta materia?');">Borrar</a>
                 </td>
             </tr>
             {% endfor %}

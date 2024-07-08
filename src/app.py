@@ -1,3 +1,4 @@
+import MySQLdb
 from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_mysqldb import MySQL
 
@@ -239,8 +240,16 @@ def borrar_profesor(id):
 def materias():
     cur = mysql.connection.cursor()
     cur.execute('SELECT * FROM materias')
-    data = cur.fetchall()
-    return render_template('materias.html', materias=data)
+    materias_data = cur.fetchall()
+
+    cur.execute('''
+        SELECT profesores.id, personas.nombre, personas.apellido_p, personas.apellido_m, profesores.Especialidad, profesores.Fecha_contratacion
+        FROM profesores
+        INNER JOIN personas ON profesores.persona_id = personas.id
+        ORDER BY profesores.id, personas.nombre, personas.apellido_p, personas.apellido_m, profesores.Especialidad, profesores.Fecha_contratacion
+    ''')
+    profesores_data=cur.fetchall()
+    return render_template('materias.html', materias=materias_data, profesores=profesores_data)
 
 @app.route('/add_materia', methods=['POST'])
 def add_materia():
@@ -263,8 +272,15 @@ def add_materia():
 def get_materia(id):
     cur = mysql.connection.cursor()
     cur.execute('SELECT * FROM materias WHERE id = %s', [id])
-    data = cur.fetchall()
-    return render_template('Edit_materias.html', materia=data[0])
+    materia = cur.fetchone()
+    cur.execute('''
+        SELECT profesores.id, personas.nombre, personas.apellido_p, personas.apellido_m, profesores.Especialidad, profesores.Fecha_contratacion
+        FROM profesores
+        INNER JOIN personas ON profesores.persona_id = personas.id
+        ORDER BY profesores.id, personas.nombre, personas.apellido_p, personas.apellido_m, profesores.Especialidad, profesores.Fecha_contratacion
+    ''')
+    profesores = cur.fetchall()
+    return render_template('Edit_materias.html', materia=materia, profesores=profesores)
 
 @app.route('/update_materia/<id>', methods=['POST'])
 def update_materia(id):
@@ -346,13 +362,26 @@ def borrar_aula(id):
     return redirect(url_for('aulas'))
 
 
-# Calificaciones
 @app.route('/calificaciones')
 def calificaciones():
     cur = mysql.connection.cursor()
     cur.execute('SELECT * FROM calificaciones')
-    data = cur.fetchall()
-    return render_template('calificaciones.html', calificaciones=data)
+    calificaciones_data = cur.fetchall()
+
+    #Para agarrarnos los del estudiante
+    cur.execute('''
+        SELECT estudiantes.id, personas.nombre, personas.apellido_p, personas.apellido_m, personas.matricula
+        FROM estudiantes
+        INNER JOIN personas ON estudiantes.persona_id = personas.id
+        ORDER BY personas.nombre, personas.apellido_p, personas.apellido_m, personas.matricula
+    ''')
+    estudiantes_data = cur.fetchall()
+
+    #Para agarrarnos los de la materia
+    cur.execute('SELECT id, Nombre, Descripcion, Profesor_id FROM materias')
+    materias_data = cur.fetchall()
+
+    return render_template('calificaciones.html', calificaciones=calificaciones_data, estudiantes=estudiantes_data, materias=materias_data)
 
 @app.route('/add_calificacion', methods=['POST'])
 def add_calificacion():
@@ -363,21 +392,39 @@ def add_calificacion():
         Calificacion = request.form['Calificacion']
 
         # Comprobar en la consola que se han ingresado esos datillos xd
-        print(f"Estudiante_id: {Estudiante_id}, Materia_id: {Materia_id}, Fecha de Contratación: {Fecha}, Calificacion: {Calificacion}")
+        print(f"Estudiante_id: {Estudiante_id}, Materia_id: {Materia_id}, Fecha: {Fecha}, Calificacion: {Calificacion}")
 
         cur = mysql.connection.cursor()
-        cur.execute('INSERT INTO calificaciones (Estudiante_id, Materia_id, Fecha, Calificacion) VALUES (%s, %s, %s, %s)',
-                    (Estudiante_id, Materia_id, Fecha, Calificacion))
-        mysql.connection.commit()
-        flash("Se agregó la calificacion exitosamente")
+        try:
+            cur.execute('INSERT INTO calificaciones (Estudiante_id, Materia_id, Fecha, Calificacion) VALUES (%s, %s, %s, %s)',
+                        (Estudiante_id, Materia_id, Fecha, Calificacion))
+            mysql.connection.commit()
+            flash("Se agregó la calificación exitosamente")
+        except MySQLdb.IntegrityError as e:
+            flash("Error al agregar la calificación. Verifique que el Estudiante y la Materia existan.")
+            print(f"Error: {e}")
         return redirect(url_for('calificaciones'))
 
 @app.route('/edit_calificaciones/<id>')
 def get_calificacion(id):
     cur = mysql.connection.cursor()
     cur.execute('SELECT * FROM calificaciones WHERE id = %s', [id])
-    data = cur.fetchall()
-    return render_template('Edit_calificaciones.html', calificacion=data[0])
+    calificacion = cur.fetchone()
+
+    #Para agarrarnos los del estudiante again
+    cur.execute('''
+        SELECT estudiantes.id, personas.nombre, personas.apellido_p, personas.apellido_m, personas.matricula
+        FROM estudiantes
+        INNER JOIN personas ON estudiantes.persona_id = personas.id
+        ORDER BY estudiantes.id, personas.nombre, personas.apellido_p, personas.apellido_m, personas.matricula
+    ''')
+    estudiantes = cur.fetchall()
+
+    #Para agarrarnos los de la materia again
+    cur.execute('SELECT id, Nombre, Descripcion, Profesor_id FROM materias')
+    materias = cur.fetchall()
+
+    return render_template('Edit_calificaciones.html', calificacion=calificacion, materias=materias, estudiantes=estudiantes)
 
 @app.route('/update_calificacion/<id>', methods=['POST'])
 def update_calificacion(id):
@@ -388,13 +435,17 @@ def update_calificacion(id):
         Calificacion = request.form['Calificacion']
 
         cur = mysql.connection.cursor()
-        cur.execute("""
-        UPDATE calificaciones
-        SET Estudiante_id = %s, Materia_id = %s, Fecha = %s, Calificacion = %s
-        WHERE id = %s
-        """, (Estudiante_id, Materia_id, Fecha, Calificacion, id))
-        mysql.connection.commit()
-        flash("La calificacion ha sido actualizado ;)")
+        try:
+            cur.execute("""
+            UPDATE calificaciones
+            SET Estudiante_id = %s, Materia_id = %s, Fecha = %s, Calificacion = %s
+            WHERE id = %s
+            """, (Estudiante_id, Materia_id, Fecha, Calificacion, id))
+            mysql.connection.commit()
+            flash("La calificación ha sido actualizada ;)")
+        except MySQLdb.IntegrityError as e:
+            flash("Error al actualizar la calificación. Verifique que el Estudiante y la Materia existan.")
+            print(f"Error: {e}")
         return redirect(url_for('calificaciones'))
 
 @app.route('/delete_calificaciones/<string:id>')
@@ -402,9 +453,8 @@ def borrar_calificacion(id):
     cur = mysql.connection.cursor()
     cur.execute('DELETE FROM calificaciones WHERE id={0}'.format(id))
     mysql.connection.commit()
-    flash("Se eliminó la calificacion exitosamente")
+    flash("Se eliminó la calificación exitosamente")
     return redirect(url_for('calificaciones'))
-
 
 
 
@@ -413,8 +463,23 @@ def borrar_calificacion(id):
 def horarios():
     cur = mysql.connection.cursor()
     cur.execute('SELECT * FROM horarios')
-    data = cur.fetchall()
-    return render_template('horarios.html', horarios=data)
+    horarios_data = cur.fetchall()
+
+    cur.execute('''
+        SELECT profesores.id, personas.nombre, personas.apellido_p, personas.apellido_m, profesores.Especialidad, profesores.Fecha_contratacion
+        FROM profesores
+        INNER JOIN personas ON profesores.persona_id = personas.id
+        ORDER BY profesores.id, personas.nombre, personas.apellido_p, personas.apellido_m, profesores.Especialidad, profesores.Fecha_contratacion
+    ''')
+    profesores_data=cur.fetchall()
+
+    cur.execute('SELECT id, Nombre, Descripcion, Profesor_id FROM materias')
+    materias_data = cur.fetchall()
+
+    cur.execute('SELECT id, Nombre FROM aulas')
+    aulas_data = cur.fetchall()
+
+    return render_template('horarios.html', horarios=horarios_data, profesores=profesores_data, materias=materias_data, aulas=aulas_data)
 
 @app.route('/add_horario', methods=['POST'])
 def add_horario():
@@ -440,8 +505,24 @@ def add_horario():
 def get_horario(id):
     cur = mysql.connection.cursor()
     cur.execute('SELECT * FROM horarios WHERE id = %s', [id])
-    data = cur.fetchall()
-    return render_template('Edit_horarios.html', horario=data[0])
+    horario = cur.fetchone()
+
+    cur.execute('''
+        SELECT profesores.id, personas.nombre, personas.apellido_p, personas.apellido_m, profesores.Especialidad, profesores.Fecha_contratacion
+        FROM profesores
+        INNER JOIN personas ON profesores.persona_id = personas.id
+        ORDER BY profesores.id, personas.nombre, personas.apellido_p, personas.apellido_m, profesores.Especialidad, profesores.Fecha_contratacion
+    ''')
+    profesores = cur.fetchall()
+
+    cur.execute('SELECT id, Nombre, Descripcion, Profesor_id FROM materias')
+    materias = cur.fetchall()
+
+    cur.execute('SELECT id, Nombre FROM aulas')
+    aulas = cur.fetchall()
+
+
+    return render_template('Edit_horarios.html', horario=horario, profesores=profesores, materias=materias, aulas=aulas)
 
 @app.route('/update_horario/<id>', methods=['POST'])
 def update_horario(id):
@@ -472,13 +553,27 @@ def borrar_horario(id):
     return redirect(url_for('horarios'))
 
 
+
 # Materias-Estudiantes (Para asignarle las materias pues xd)
 @app.route('/materias_estudiantes')
 def materias_estudiantes():
     cur = mysql.connection.cursor()
     cur.execute('SELECT * FROM materias_estudiantes')
-    data = cur.fetchall()
-    return render_template('materias_estudiantes.html', materias_estudiantes=data)
+    materias_estudiantes_data = cur.fetchall()
+
+    cur.execute('''
+        SELECT estudiantes.id, personas.nombre, personas.apellido_p, personas.apellido_m, personas.matricula
+        FROM estudiantes
+        INNER JOIN personas ON estudiantes.persona_id = personas.id
+        ORDER BY personas.nombre, personas.apellido_p, personas.apellido_m, personas.matricula
+    ''')
+    estudiantes_data = cur.fetchall()
+
+    cur.execute('SELECT * FROM horarios')
+    horarios_data = cur.fetchall()
+
+    return render_template('materias_estudiantes.html', materias_estudiantes=materias_estudiantes_data, estudiantes=estudiantes_data, horarios=horarios_data)
+
 
 @app.route('/add_materia_estudiante', methods=['POST'])
 def add_materia_estudiante():
@@ -500,8 +595,20 @@ def add_materia_estudiante():
 def get_materia_estudiante(id):
     cur = mysql.connection.cursor()
     cur.execute('SELECT * FROM materias_estudiantes WHERE id = %s', [id])
-    data = cur.fetchall()
-    return render_template('Edit_materias_estudiantes.html', materia_estudiante=data[0])
+    materia_estudiante = cur.fetchone()
+
+    cur.execute('''
+        SELECT estudiantes.id, personas.nombre, personas.apellido_p, personas.apellido_m, personas.matricula
+        FROM estudiantes
+        INNER JOIN personas ON estudiantes.persona_id = personas.id
+        ORDER BY estudiantes.id, personas.nombre, personas.apellido_p, personas.apellido_m, personas.matricula
+    ''')
+    estudiantes = cur.fetchall()
+
+    cur.execute('SELECT id, Profesor_id, Materia_id, Aula_id, Dia, Hora_inicio, Hora_fin FROM horarios')
+    horarios = cur.fetchall()
+
+    return render_template('Edit_materias_estudiantes.html', materia_estudiante=materia_estudiante, estudiantes=estudiantes, horarios=horarios)
 
 @app.route('/update_materia_estudiante/<id>', methods=['POST'])
 def update_materia_estudiante(id):
@@ -526,6 +633,7 @@ def borrar_materia_estudiante(id):
     mysql.connection.commit()
     flash("Se eliminó materia-estudiante exitosamente")
     return redirect(url_for('materias_estudiantes'))
+
 
 
 if __name__ == '__main__':

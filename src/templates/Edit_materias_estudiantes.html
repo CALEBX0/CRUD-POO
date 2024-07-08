@@ -1,6 +1,22 @@
 <form action="/update_materia_estudiante/{{ materia_estudiante[0] }}" method="POST">
-    <input type="text" name="Estudiante_id" placeholder="Id del Estudiante" value="{{ materia_estudiante[1] }}">
-    <input type="text" name="Horario_id" placeholder="Id del Horario" value="{{ materia_estudiante[2] }}">
+    <label for="Estudiante_id">Estudiante ID:</label>
+    <select name="Estudiante_id" id="Estudiante_id">
+        {% for estudiante in estudiantes %}
+            <option value="{{ estudiante[0] }}" {% if estudiante[0] == materia_estudiante[1] %}selected{% endif %}>
+                {{ estudiante[1] }} {{ estudiante[2] }} {{ estudiante[3] }} (ID: {{ estudiante[0] }})
+            </option>
+        {% endfor %}
+    </select>
+
+    <label for="Horario_id">Horario ID:</label>
+    <select name="Horario_id" id="Horario_id">
+        {% for horario in horarios %}
+            <option value="{{ horario[0] }}" {% if horario[0] == materia_estudiante[2] %}selected{% endif %}>
+                {{ horario[1] }} {{ horario[2] }} {{ horario[3] }} (ID: {{ horario[0] }})
+            </option>
+        {% endfor %}
+    </select>
+
     <button type="submit">Guardar</button>
 </form>
 

@@ -1,7 +1,27 @@
 <form action="/update_calificacion/{{ calificacion[0] }}" method="POST">
-    <input type="text" name="Estudiante_id" placeholder="Id del Estudiante" value="{{ calificacion[1] }}">
-    <input type="text" name="Materia_id" placeholder="Id de la materia" value="{{ calificacion[2] }}">
+    <label for="Estudiante_id">Estudiante ID:</label>
+    <select name="Estudiante_id" id="Estudiante_id">
+        {% for estudiante in estudiantes %}
+            <option value="{{ estudiante[0] }}" {% if estudiante[0] == calificacion[1] %}selected{% endif %}>
+                {{ estudiante[1] }} {{ estudiante[2] }} {{ estudiante[3] }} (ID: {{ estudiante[0] }})
+            </option>
+        {% endfor %}
+    </select>
+
+    <label for="Materia_id">Materia ID:</label>
+    <select name="Materia_id" id="Materia_id">
+        {% for materia in materias %}
+            <option value="{{ materia[0] }}" {% if materia[0] == calificacion[2] %}selected{% endif %}>
+                {{ materia[1] }} {{ materia[2] }} (ID: {{ materia[0] }})
+            </option>
+        {% endfor %}
+    </select>
+
+    <label for="Fecha">Fecha:</label>
     <input type="text" name="Fecha" placeholder="Fecha" value="{{ calificacion[3] }}">
+
+    <label for="Calificacion">Calificacion:</label>
     <input type="text" name="Calificacion" placeholder="Calificacion" value="{{ calificacion[4] }}">
+
     <button type="submit">Guardar</button>
 </form>

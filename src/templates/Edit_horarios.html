@@ -1,9 +1,38 @@
 <form action="/update_horario/{{ horario[0] }}" method="POST">
-    <input type="text" name="Profesor_id" placeholder="Id del Profesor" value="{{ horario[1] }}">
-    <input type="text" name="Materia_id" placeholder="Id de la materia" value="{{ horario[2] }}">
-    <input type="text" name="Aula_id" placeholder="Id del Aula" value="{{ horario[3] }}">
-    <input type="text" name="Dia" placeholder="Dia" value="{{ horario[4] }}">
+    <label for="Profesor_id">Profesor ID:</label>
+    <select name="Profesor_id" id="Profesor_id">
+        {% for profesor in profesores %}
+            <option value="{{ profesor[0] }}" {% if profesor[0] == horario[1] %}selected{% endif %}>
+                {{ profesor[1] }} {{ profesor[2] }} {{ profesor[3] }} (ID: {{ profesor[0] }})
+            </option>
+        {% endfor %}
+    </select>
+
+    <label for="Materia_id">Materia ID:</label>
+    <select name="Materia_id" id="Materia_id">
+        {% for materia in materias %}
+            <option value="{{ materia[0] }}" {% if materia[0] == horario[2] %}selected{% endif %}>
+                {{ materia[1] }} {{ materia[2] }} (ID: {{ materia[0] }})
+            </option>
+        {% endfor %}
+    </select>
+
+    <label for="Aula_id">Aula ID:</label>
+    <select name="Aula_id" id="Aula_id">
+        {% for aula in aulas %}
+            <option value="{{ aula[0] }}" {% if aula[0] == horario[3] %}selected{% endif %}>
+                {{ aula[1] }} {{ aula[2] }} (ID: {{ aula[0] }})
+            </option>
+        {% endfor %}
+    </select>
+
+    <label for="Dia">Dia:</label>
+    <input type="text" name="Dia" placeholder="Dia (Ej: Lunes)" value="{{ horario[4] }}">
+
+    <label for="Hora_inicio">Hora_inicio:</label>
     <input type="text" name="Hora_inicio" placeholder="Hora de inicio" value="{{ horario[5] }}">
+
+    <label for="Hora_fin">Hora_fin:</label>
     <input type="text" name="Hora_fin" placeholder="Hora de fin" value="{{ horario[6] }}">
     <button type="submit">Guardar</button>
 </form>

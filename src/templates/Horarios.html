@@ -30,10 +30,22 @@
 
 
     <form action="/add_horario" method="post">
-        <input type="text" name="Profesor_id" placeholder="Id del Profesor" required>
-        <input type="text" name="Materia_id" placeholder="Id de la materia" required>
-        <input type="text" name="Aula_id" placeholder="Id del Aula" required>
-        <input type="text" name="Dia" placeholder="Dia" required>
+        Profesor: <select name="Profesor_id">
+            {% for profesor in profesores %}
+                <option value="{{ profesor[0] }}">{{ profesor[1] }} {{ profesor[2] }} {{ profesor[3] }}</option>
+            {% endfor %}
+        </select>
+        Materia: <select name="Materia_id">
+            {% for materia in materias %}
+                <option value="{{ materia[0] }}">{{ materia[1] }}</option>
+            {% endfor %}
+        </select>
+        Aula: <select name="Aula_id">
+            {% for aula in aulas %}
+                <option value="{{ aula[0] }}">{{ aula[1] }}</option>
+            {% endfor %}
+        </select>
+        <input type="text" name="Dia" placeholder="Dia (Ej: Lunes)" required>
         <input type="text" name="Hora_inicio" placeholder="Hora de inicio" required>
         <input type="text" name="Hora_fin" placeholder="Hora de fin" required>
         <button type="submit">Guardar</button>
@@ -62,7 +74,7 @@
                 <td>{{ horario[6] }}</td>
                 <td>
                     <a href="/edit_horarios/{{ horario[0] }}">Editar</a>
-                    <a href="/delete_horarios/{{ horario[0] }}">Borrar</a>
+                    <a href="/delete_horarios/{{ horario[0] }}" onclick="return confirm('¿Estás seguro de que deseas borrar este horario?');">Borrar</a>
                 </td>
             </tr>
             {% endfor %}
