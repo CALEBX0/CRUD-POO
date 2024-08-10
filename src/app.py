@@ -1,16 +1,16 @@
-import MySQLdb
+import os
 from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_mysqldb import MySQL
 
 app=Flask(__name__)
 
 #Mysqlconnection
-app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = '110717'
-app.config['MYSQL_DB'] = 'escuela'
-app.config['MYSQL_PORT'] = 3306
-mysql =MySQL(app)
+app.config['MYSQL_HOST'] = os.environ.get('MYSQL_HOST', 'localhost')
+app.config['MYSQL_USER'] = os.environ.get('MYSQL_USER', 'root')
+app.config['MYSQL_PASSWORD'] = os.environ.get('MYSQL_PASSWORD', '11071726')
+app.config['MYSQL_DB'] = os.environ.get('MYSQL_DB', 'escuela')
+app.config['MYSQL_PORT'] = int(os.environ.get('MYSQL_PORT', 3306))
+mysql = MySQL(app)
 
 #settings
 app.secret_key  = 'mysecretkey'
@@ -637,4 +637,4 @@ def borrar_materia_estudiante(id):
 
 
 if __name__ == '__main__':
-    app.run(port=5000, debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True)
